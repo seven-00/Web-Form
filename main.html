@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+    body{
+        display:flex;
+        justify-content: center;
+    }
+    form{
+        display:flex;
+        flex-direction: column;
+        background-color: rgb(230, 230, 235);
+        box-sizing: border-box;
+        padding: 10px;
+        width: 350px;
+    }    
+    input{
+        height: 30px;
+        margin-bottom: 10px;
+    }
+    label{
+        margin: 5px;
+    }
+    button{
+        width: fit-content;
+    }
+    #dob{
+        width:fit-content
+    }
+    .tabdiv{
+        background-color:black;
+        width: fit-content
+    }
+    .tab-data{
+        color:aliceblue;
+    } 
+    #tablemain{
+        color: white;
+    }
+    .tabhead{
+        padding-left:20px;
+        padding-right:20px;
+    } 
+
+    </style>   
+</head>
+<body style="font-family:sans-serif;">
+<div class="formdiv">
+    <form>
+    <h1>Account form</h1>
+      <label>First Name</label>
+      <input type="text" id="fname" class="input"placeholder="First name">
+      <label>Last Name</label>
+      <input type="text" id="lname" class="input" placeholder="Last name">
+      <label>Date of birth</label>
+      <input type="date" id="dob" class="input"placeholder="DOB">
+      <label>Email</label>
+      <input type="email" id="email" class="input"placeholder="email">
+      <label>Password</label>
+      <input type="password" id="password" class="input" placeholder="password">
+      <label>Confirm Password</label>
+      <input type="password" id="password2" class="input" placeholder="password">
+    <button type="button"id="submit">Submit</button>
+    </form>
+    </div>
+    <div class="tabdiv">
+    <table id="tablemain">
+        <tr>
+                <th id="tabhead">First Name</th>
+                <th id="tabhead">Last Name</th>
+                <th id="tabhead">Date of birth</th>
+                <th id="tabhead">Email</th>
+                <th id="tabhead">password</th>
+        </tr>
+    </table>
+</div>
+</body>
+<script>
+    const arrObj=[];
+var targetId = 1;
+var selectedRow = null;
+const submitButton =document.getElementById("submit");
+submitButton.addEventListener('click',submitForm)
+function person(fname,lname,dob,email,password){
+    this.firstname = fname;
+    this.lastname = lname;
+    this.dob = dob;
+    this.email= email;
+    this.password =password;
+}
+function submitForm() {
+    const fname=document.getElementById('fname').value;
+    const lname=document.getElementById('lname').value;
+    const dob=document.getElementById('dob').value;
+    const email=document.getElementById('email').value;
+    const password=document.getElementById('password').value;
+    const password2=document.getElementById('password2').value;
+    var flag=true
+    if (selectedRow === null){
+    flag=submitValidation(fname,lname,dob,email,password,password2);
+    if (flag==true){
+    const Newperson =new person(fname,lname,dob,email,password)
+    console.log(Newperson);
+    displayData(Newperson);
+    clearInput();
+    }
+    }
+    else{
+        updateForm(fname,lname,dob,email,password,password2);
+    }
+}
+function clearInput(){
+    const inputs = document.querySelectorAll('.input')
+    inputs.forEach(input => {
+        input.value=""
+    });
+}
+function displayData(Newperson){
+    const table=document.getElementById("tablemain")
+    var row= table.insertRow(-1);
+        var objValues = Object.values(Newperson)
+        let j;
+        for (j=0; j<objValues.length; j++) {
+            var data = row.insertCell(j)
+            data.innerHTML = objValues[j];
+        }
+        var btn = row.insertCell(j)
+        btn.innerHTML=`<button onClick='editbtn(this)'>Edit</button>`  
+    targetId++;
+    
+}
+function submitValidation(fname,lname,dob,email,password,password2)
+{
+    if(fname==''||lname==''||dob==''||email==''||password==''||password2=='')
+    {
+        alert('All fields are required to be filled')
+        return false
+    }
+    else{
+        if(!dateValidation(dob)||!emailValidation(email))
+        {
+            return false
+        }
+        else{
+            return true
+        }
+    }
+}
+function updateValidation(fname,lname,dob,email,password,password2)
+{
+    if(fname==''||lname==''||dob==''||email==''||password==''||password2=='')
+    {
+        alert('All fields are required to be filled')
+        return false
+    }
+    else{
+        if(!dateValidation(dob)||!updateemailValidation(email))
+        {
+            return false
+        }
+        else{
+            return true
+        }
+    }
+}
+function updateemailValidation(email)
+{
+    let regex=/^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
+    let result=regex.test(email)
+    if(!result)
+    {
+        alert('Enter valid email address')
+        return false
+    }
+    else{
+        const demo = document.querySelector('#tablemain')
+        for (let i = 0; i < targetId; i++){
+            if(demo.rows[i]!==selectedRow)
+            {
+                if(email===demo.rows[i].cells[3].innerHTML)
+                {
+                    alert('Email already exists')
+                    return false
+                }
+            }   
+        }
+        return true
+    }
+}
+
+function emailValidation(email)
+{
+    let regex=/^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
+    let result=regex.test(email)
+    if(!result)
+    {
+        alert('Enter valid email address')
+        return false
+    }
+    else{
+        const demo = document.querySelector('#tablemain')
+        for (let i = 0; i < targetId; i++){
+                if(email===demo.rows[i].cells[3].innerHTML)
+                {
+                    alert('Email already Exists'+
+                    '\nEnter another Email ')
+                    return false
+                }
+                }
+        return true
+    }
+}
+function passwordValidation(password,password2)
+{
+    if(password==password2)
+    {
+        let regex=/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%&-]).{8,}$/;
+    let result=regex.test(password)
+    if(!result)
+    {
+        alert('Enter Valid password'+
+        '\nPassowrd must contain minimum 8 letters'+
+        '\nMust contain 1 Uppercase letter'+
+        '\nMust contain 1 LowerCase letter'+
+        '\nMust contain 1 Numeric value'+
+        '\nMust contain 1 Special Character')
+        return false
+    }
+    else{
+        return true
+    }
+    }
+    else{
+        alert('Passwords are not matching')
+        return false
+    }
+}
+function dateValidation(dob)
+{
+let currDate = new Date();
+let demo = new Date(dob);
+if(demo>currDate)
+{
+    alert('Invalid Date Entered')
+    return false
+}
+else{
+    return true
+}
+
+}
+function editbtn(td)
+{
+    
+    selectedRow=td.parentElement.parentElement;
+    document.getElementById('fname').value=selectedRow.cells[0].innerHTML;
+    document.getElementById('lname').value=selectedRow.cells[1].innerHTML;
+    document.getElementById('dob').value=selectedRow.cells[2].innerHTML;
+    document.getElementById('email').value=selectedRow.cells[3].innerHTML;
+    document.getElementById('password').value=selectedRow.cells[4].innerHTML;
+    document.getElementById('password2').value=selectedRow.cells[4].innerHTML;
+}
+function updateForm(fname,lname,dob,email,password,password2)
+{
+    if(updateValidation(fname,lname,dob,email,password,password2)){
+    
+        selectedRow.cells[0].innerHTML = document.getElementById('fname').value;
+        selectedRow.cells[1].innerHTML = document.getElementById('lname').value;
+        selectedRow.cells[2].innerHTML = document.getElementById('dob').value;
+        selectedRow.cells[3].innerHTML = document.getElementById('email').value;
+        selectedRow.cells[4].innerHTML = document.getElementById('password').value;
+        clearInput();
+        selectedRow =null;
+    }
+}
+</script>
+</html>
