@@ -140,7 +140,7 @@ function submitValidation(fname,lname,dob,email,password,password2)
         return false
     }
     else{
-        if(!dateValidation(dob)||!emailValidation(email))
+        if(!dateValidation(dob)||!emailValidation(email)||passwordValidation(password,password2))
         {
             return false
         }
@@ -157,7 +157,7 @@ function updateValidation(fname,lname,dob,email,password,password2)
         return false
     }
     else{
-        if(!dateValidation(dob)||!updateemailValidation(email))
+        if(!dateValidation(dob)||!updateemailValidation(email)||passwordValidation(password,password2))
         {
             return false
         }
@@ -273,7 +273,7 @@ function updateForm(fname,lname,dob,email,password,password2)
         selectedRow.cells[3].innerHTML = document.getElementById('email').value;
         selectedRow.cells[4].innerHTML = document.getElementById('password').value;
         clearInput();
-        selectedRow =null;
+        selectedRow=null;
     }
 }
 </script>
