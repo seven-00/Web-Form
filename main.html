@@ -140,7 +140,7 @@ function submitValidation(fname,lname,dob,email,password,password2)
         return false
     }
     else{
-        if(!dateValidation(dob)||!emailValidation(email)||passwordValidation(password,password2))
+        if(!dateValidation(dob)||!emailValidation(email)||!passwordValidation(password,password2))
         {
             return false
         }
@@ -157,7 +157,7 @@ function updateValidation(fname,lname,dob,email,password,password2)
         return false
     }
     else{
-        if(!dateValidation(dob)||!updateemailValidation(email)||passwordValidation(password,password2))
+        if(!dateValidation(dob)||!updateemailValidation(email)||!passwordValidation(password,password2))
         {
             return false
         }
